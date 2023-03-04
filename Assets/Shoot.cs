@@ -25,7 +25,7 @@ public class Shoot : MonoBehaviour
     {
         RaycastHit hit;
 
-        if (Input.GetMouseButtonDown(0) && Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, enemyLayer))
+        if (Input.GetMouseButtonDown(0) && Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, enemyLayer) && !pauseMenu.isPaused)
         {
             Debug.Log("Hit");
 

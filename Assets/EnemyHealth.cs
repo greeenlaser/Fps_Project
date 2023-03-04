@@ -21,9 +21,13 @@ public class EnemyHealth : MonoBehaviour
 
     Shoot shoot;
 
+    UI_PauseMenu pauseMenu;
+
     void Start()
     {
         shoot = FindObjectOfType<Shoot>();
+
+        pauseMenu = FindObjectOfType<UI_PauseMenu>();
 
         meshRenderer = GetComponent<MeshRenderer>();
 
@@ -63,6 +67,16 @@ public class EnemyHealth : MonoBehaviour
             Destroy(gameObject);
 
             healthText.gameObject.SetActive(false);
+        }
+
+        if (pauseMenu.isPaused)
+        {
+            healthText.gameObject.SetActive(false);
+        }
+
+        if(!pauseMenu.isPaused && health > 0)
+        {
+            healthText.gameObject.SetActive(true);
         }
     }
 }
