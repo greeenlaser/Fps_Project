@@ -12,6 +12,9 @@ public class PlayerMovement : MonoBehaviour
 
     public float speed = 5f;
 
+    public float increasedSpeed;
+    public float normalSpeed;
+
     //Gravity + physics
 
     Vector3 velocity;
@@ -49,6 +52,15 @@ public class PlayerMovement : MonoBehaviour
         float z = Input.GetAxis("Vertical");
 
         move = transform.right * x + transform.forward * z;
+
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            speed = increasedSpeed;
+        }
+        else
+        {
+            speed = normalSpeed;
+        }
 
         controller.Move(move * speed * Time.deltaTime);
 
