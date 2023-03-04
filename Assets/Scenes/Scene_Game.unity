@@ -323,7 +323,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &146949027
 RectTransform:
   m_ObjectHideFlags: 0
@@ -855,7 +855,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hurtMat: {fileID: 2100000, guid: c2bd8ef40087c514abcb50843234c471, type: 2}
-  damageDelayTime: 0
+  damageDelayTime: 0.15
   health: 100
   healthText: {fileID: 146949028}
 --- !u!65 &452646961
