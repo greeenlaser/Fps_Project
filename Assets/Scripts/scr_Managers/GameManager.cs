@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         PauseMenuScript.UnpauseGame();
-        ConsoleScript.CloseConsole();
+        //ConsoleScript.CloseConsole();
+        ConsoleScript.par_Console.SetActive(false);
     }
 }

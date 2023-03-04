@@ -36,6 +36,7 @@ public class Manager_Console : MonoBehaviour
 
     private void OpenConsole()
     {
+        /*
         if (!PauseMenuScript.isPaused)
         {
             PauseMenuScript.PauseWithoutUI();
@@ -43,9 +44,11 @@ public class Manager_Console : MonoBehaviour
 
         PauseMenuScript.isConsoleOpen = true;
         par_Console.SetActive(true);
+        */
     }
     public void CloseConsole()
     {
+        /*
         PauseMenuScript.isConsoleOpen = false;
         par_Console.SetActive(true);
 
@@ -53,5 +56,6 @@ public class Manager_Console : MonoBehaviour
         {
             PauseMenuScript.UnpauseGame();
         }
+        */
     }
 }

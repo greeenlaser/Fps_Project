@@ -5,18 +5,15 @@ using UnityEngine;
 public class CameraLook : MonoBehaviour
 {
     public float sensitivity = 100f;
-
-    public Transform playerBody;
-
     float xRotation;
 
-    // Start is called before the first frame update
-    void Start()
+    private Transform playerBody;
+
+    private void Awake()
     {
-        
+        playerBody = transform.parent;
     }
 
-    // Update is called once per frame
     void Update()
     {
         float mouseX = Input.GetAxis("Mouse X") * sensitivity * Time.deltaTime;
