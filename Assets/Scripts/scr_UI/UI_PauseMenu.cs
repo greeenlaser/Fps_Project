@@ -59,6 +59,8 @@ public class UI_PauseMenu : MonoBehaviour
             par_PM.SetActive(false);
             par_PMContent.SetActive(false);
             par_SettingsContent.SetActive(false);
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
         }
 
         //then unpause game if no other pause-dependant UI is open

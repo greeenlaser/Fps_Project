@@ -54,7 +54,7 @@ public class EnemyHealth : MonoBehaviour
         if (shoot.beenHit && !canTakeDamage)
         {
             canTakeDamage = true;
-            StartCoroutine(TakeDamage(20));
+            StartCoroutine(TakeDamage(shoot.damage));
             shoot.beenHit = false;
         }
 
