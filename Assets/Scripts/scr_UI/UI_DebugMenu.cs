@@ -5,7 +5,8 @@ using UnityEngine;
 
 public class UI_DebugMenu : MonoBehaviour
 {
-    [Header("Assignables")]
+    [Header("UI")]
+    public GameObject par_DebugMenu;
     [SerializeField] private TMP_Text txt_FPS;
 
     //private variables

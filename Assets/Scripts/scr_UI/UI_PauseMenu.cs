@@ -38,6 +38,11 @@ public class UI_PauseMenu : MonoBehaviour
         }
 
         if (isPaused
+
+            //checking if other UI programs
+            //have not already paused the game
+            &&!isConsoleOpen
+
             && !par_PM.activeInHierarchy)
         {
             PauseWithUI();
