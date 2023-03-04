@@ -31,9 +31,13 @@ public class PlayerMovement : MonoBehaviour
 
     public float jumpHeight;
 
+    UI_PauseMenu pauseMenu;
+
     // Start is called before the first frame update
     void Start()
     {
+        pauseMenu = FindObjectOfType<UI_PauseMenu>();
+
         controller = GetComponent<CharacterController>();
     }
 
@@ -64,7 +68,7 @@ public class PlayerMovement : MonoBehaviour
 
         controller.Move(move * speed * Time.deltaTime);
 
-        if (isGrounded && Input.GetButton("Jump"))
+        if (isGrounded && Input.GetButtonDown("Jump"))
         {
             velocity.y = Mathf.Sqrt(jumpHeight * gravity * -2f);
         }
