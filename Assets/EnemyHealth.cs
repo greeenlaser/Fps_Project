@@ -19,8 +19,12 @@ public class EnemyHealth : MonoBehaviour
 
     [SerializeField] TextMeshProUGUI healthText;
 
+    Shoot shoot;
+
     void Start()
-    { 
+    {
+        shoot = FindObjectOfType<Shoot>();
+
         meshRenderer = GetComponent<MeshRenderer>();
 
         healthText.gameObject.SetActive(true);
@@ -47,10 +51,11 @@ public class EnemyHealth : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Tab) && !canTakeDamage)
+        if (shoot.beenHit && !canTakeDamage)
         {
             canTakeDamage = true;
-            StartCoroutine(TakeDamage(20)); 
+            StartCoroutine(TakeDamage(20));
+            shoot.beenHit = false;
         }
 
         if(health <= 0)
