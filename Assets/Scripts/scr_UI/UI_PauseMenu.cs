@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class UI_PauseMenu : MonoBehaviour
 {
     [Header("UI")]
-    [SerializeField] private GameObject par_PM;
+    public GameObject par_PM;
     [SerializeField] private GameObject par_PMContent;
     [SerializeField] private GameObject par_SettingsContent;
     [SerializeField] private Button btn_ReturnToGame;
@@ -18,16 +18,15 @@ public class UI_PauseMenu : MonoBehaviour
 
     //public but hidden variables
     [HideInInspector] public bool isPaused;
+    [HideInInspector] public bool isConsoleOpen;
 
-    private void Start()
+    private void Awake()
     {
         btn_ReturnToGame.onClick.AddListener(UnpauseGame);
         btn_ShowSettings.onClick.AddListener(ShowSettings);
         btn_ReturnToPM.onClick.AddListener(ReturnToPauseMenu);
         btn_ReturnToMM.onClick.AddListener(ReturnToMainMenu);
         btn_Quit.onClick.AddListener(Quit);
-
-        UnpauseGame();
     }
 
     private void Update()
@@ -53,13 +52,21 @@ public class UI_PauseMenu : MonoBehaviour
     {
         isPaused = false;
 
-        Time.timeScale = 1;
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        //first close pause menu if it is open
+        if (par_PM.activeInHierarchy)
+        {
+            par_PM.SetActive(false);
+            par_PMContent.SetActive(false);
+            par_SettingsContent.SetActive(false);
+        }
 
-        par_PM.SetActive(false);
-        par_PMContent.SetActive(false);
-        par_SettingsContent.SetActive(false);
+        //then unpause game if no other pause-dependant UI is open
+        if (!isConsoleOpen)
+        {
+            Time.timeScale = 1;
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
     }
     public void PauseWithoutUI()
     {
