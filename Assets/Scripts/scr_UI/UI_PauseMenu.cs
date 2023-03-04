@@ -95,6 +95,13 @@ public class UI_PauseMenu : MonoBehaviour
     }
     public void Quit()
     {
-        Application.Quit();
+        if (Application.isEditor)
+        {
+            UnityEditor.EditorApplication.isPlaying = false;
+        }
+        else
+        {
+            Application.Quit();
+        }
     }
 }
