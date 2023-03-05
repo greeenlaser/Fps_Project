@@ -30,16 +30,16 @@ public class Manager_Console : MonoBehaviour
     private UI_DebugMenu DebugMenuScript;
 
     //private variables
-    private bool debugMenuEnabled;
+    private bool debugMenuEnabled = true;
     private bool startedConsoleSetupWait;
     private string input;
     private string output;
     private string lastOutput;
     private int currentSelectedInsertedCommand;
-    private int currentScene;
     private readonly List<string> separatedWords = new();
     private readonly List<GameObject> createdTexts = new();
     private readonly List<string> insertedCommands = new();
+
     public enum MessageType
     {
         CONSOLE_INFO_MESSAGE,
@@ -181,7 +181,7 @@ public class Manager_Console : MonoBehaviour
                     insertedCommands.Add(input);
                     currentSelectedInsertedCommand = insertedCommands.Count - 1;
 
-                    CreateNewConsoleLine("Error: Unknown or invalid command or this command is not allowed in this scene or while player is dead!", MessageType.CONSOLE_ERROR_MESSAGE.ToString());
+                    CreateNewConsoleLine("Error: Unknown or invalid command!", MessageType.CONSOLE_ERROR_MESSAGE.ToString());
                 }
             }
         }

@@ -27,10 +27,13 @@ public class PlayerMovement : MonoBehaviour
 
     //scripts
     private UI_PauseMenu PauseMenu;
+    private Manager_Console ConsoleScript;
 
     private void Awake()
     {
         PauseMenu = par_Managers.GetComponent<UI_PauseMenu>();
+        ConsoleScript = par_Managers.GetComponent<Manager_Console>();
+
         controller = GetComponent<CharacterController>();
     }
 
@@ -66,6 +69,7 @@ public class PlayerMovement : MonoBehaviour
             && Input.GetButtonDown("Jump"))
         {
             velocity.y = Mathf.Sqrt(jumpHeight * gravity * -2f);
+            ConsoleScript.CreateNewConsoleLine("Player jumped", "UNITY_LOG_MESSAGE");
         }
 
         velocity.y += gravity * Time.deltaTime;
