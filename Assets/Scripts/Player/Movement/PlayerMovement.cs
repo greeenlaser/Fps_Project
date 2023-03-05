@@ -4,55 +4,50 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    // Movement
+    [Header("Movement")]
+    [SerializeField] private float speed = 5f;
+    [SerializeField] private float increasedSpeed;
+    [SerializeField] private float normalSpeed;
 
-    CharacterController controller;
+    [Header("Gravity")]
+    [SerializeField] private float jumpHeight;
+    [SerializeField] private float groundDistance = 0.4f;
+    [SerializeField] private float gravity = -9.81f;
+    [SerializeField] private Transform groundCheck;
+    [SerializeField] private LayerMask groundMask;
 
-    Vector3 move;
+    [Header("Other assignables")]
+    [SerializeField] private GameObject par_Managers;
 
-    public float speed = 5f;
+    //private variables
+    private bool isGrounded;
+    private Vector3 move;
+    private Vector3 velocity;
+    private CharacterController controller;
 
-    public float increasedSpeed;
-    public float normalSpeed;
+    //scripts
+    private UI_PauseMenu PauseMenu;
 
-    //Gravity + physics
-
-    Vector3 velocity;
-
-    public float gravity = -9.81f;
-
-    public Transform groundCheck;
-
-    public LayerMask groundMask;
-
-    public float groundDistance = 0.4f;
-
-    bool isGrounded;
-
-    public float jumpHeight;
-
-    UI_PauseMenu pauseMenu;
-
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
-        pauseMenu = FindObjectOfType<UI_PauseMenu>();
-
+        PauseMenu = par_Managers.GetComponent<UI_PauseMenu>();
         controller = GetComponent<CharacterController>();
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+        isGrounded = Physics.CheckSphere(groundCheck.position, 
+                                         groundDistance, 
+                                         groundMask);
 
-        if(isGrounded && velocity.y < 0)
+        if (isGrounded 
+            && velocity.y < 0)
         {
             velocity.y = -2f;
         }
 
         float x = Input.GetAxis("Horizontal");
-
         float z = Input.GetAxis("Vertical");
 
         move = transform.right * x + transform.forward * z;
@@ -66,15 +61,14 @@ public class PlayerMovement : MonoBehaviour
             speed = normalSpeed;
         }
 
-        controller.Move(move * speed * Time.deltaTime);
-
-        if (isGrounded && Input.GetButtonDown("Jump"))
+        controller.Move(speed * Time.deltaTime * move);
+        if (isGrounded 
+            && Input.GetButtonDown("Jump"))
         {
             velocity.y = Mathf.Sqrt(jumpHeight * gravity * -2f);
         }
 
         velocity.y += gravity * Time.deltaTime;
-
         controller.Move(velocity * Time.deltaTime);
     }
 }
