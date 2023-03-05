@@ -12,6 +12,9 @@ public class Shoot : MonoBehaviour
     [Header("Damage")]
     public int damage;
 
+    // Hidden public variables
+    [HideInInspector] public bool amLooking;
+
     [Header("Object References")]
     public GameObject crosshair;
 
@@ -29,13 +32,24 @@ public class Shoot : MonoBehaviour
     {
         RaycastHit hit;
 
+        bool raycaster = Physics.Raycast(transform.position,
+                               transform.TransformDirection(Vector3.forward),
+                               out hit,
+                               Mathf.Infinity,
+                               enemyLayer);
+
+        if (raycaster)
+        {
+            amLooking = true;
+        }
+        else
+        {
+            amLooking = false;
+        }
+
         if (Input.GetMouseButtonDown(0)
             && !pauseMenu.isPaused
-            && Physics.Raycast(transform.position,
-                               transform.TransformDirection(Vector3.forward), 
-                               out hit, 
-                               Mathf.Infinity, 
-                               enemyLayer))
+            && raycaster)
         {
             Debug.Log("Hit");
 

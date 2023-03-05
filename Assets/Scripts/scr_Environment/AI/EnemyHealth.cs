@@ -1,13 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
+using UnityEngine.UI;
 
 public class EnemyHealth : MonoBehaviour
 {
     [Header("Haelth")]
     public int health = 100;
-    [SerializeField] TextMeshProUGUI healthText;
+    [SerializeField] Slider healthBar;
 
     [Header("Damage")]
     [SerializeField] float damageDelayTime;
@@ -24,15 +24,15 @@ public class EnemyHealth : MonoBehaviour
 
     void Awake()
     {
+        healthBar.value = 100;
+
+        healthBar.gameObject.SetActive(false);
+
         shoot = FindObjectOfType<Shoot>();
 
         pauseMenu = FindObjectOfType<UI_PauseMenu>();
 
         meshRenderer = GetComponent<MeshRenderer>();
-
-        healthText.gameObject.SetActive(true);
-
-        healthText.text = gameObject.name + "'s health: " + health;
 
         normalMat = meshRenderer.material;
     }
@@ -43,7 +43,7 @@ public class EnemyHealth : MonoBehaviour
 
         health -= damage;
 
-        healthText.text = gameObject.name + "'s health: " + health;
+        healthBar.value = health;
 
         meshRenderer.material = hurtMat;
 
@@ -65,19 +65,28 @@ public class EnemyHealth : MonoBehaviour
         if(health <= 0)
         {
             Destroy(gameObject);
-
-            healthText.gameObject.SetActive(false);
         }
 
+        // health bar with pause menu
         if (pauseMenu.isPaused)
         {
-            healthText.gameObject.SetActive(false);
+            healthBar.gameObject.SetActive(false);
         }
 
         if(!pauseMenu.isPaused 
             && health > 0)
         {
-            healthText.gameObject.SetActive(true);
+            healthBar.gameObject.SetActive(true);
+        }
+
+        // health bar when looking at it
+        if (shoot.amLooking)
+        {
+            healthBar.gameObject.SetActive(true);
+        }
+        else
+        {
+            healthBar.gameObject.SetActive(false);
         }
     }
 }
