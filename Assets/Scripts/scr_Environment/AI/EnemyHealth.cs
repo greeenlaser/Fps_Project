@@ -54,12 +54,13 @@ public class EnemyHealth : MonoBehaviour
 
     void Update()
     {
-        if (shoot.beenHit 
+        if (shoot.damageTaken 
             && !canTakeDamage)
         {
             canTakeDamage = true;
             StartCoroutine(TakeDamage(shoot.damage));
             shoot.beenHit = false;
+            shoot.damageTaken = false;
         }
 
         if(health <= 0)
