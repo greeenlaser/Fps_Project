@@ -4,15 +4,19 @@ using UnityEngine;
 
 public class Shoot : MonoBehaviour
 {
+    [Header("Layers")]
     public LayerMask enemyLayer;
 
     [HideInInspector] public bool beenHit = false;
 
+    [Header("Damage")]
     public int damage;
 
-    UI_PauseMenu pauseMenu;
-
+    [Header("Object References")]
     public GameObject crosshair;
+
+    // Scripts
+    UI_PauseMenu pauseMenu;
 
     // Start is called before the first frame update
     void Start()
@@ -25,7 +29,13 @@ public class Shoot : MonoBehaviour
     {
         RaycastHit hit;
 
-        if (Input.GetMouseButtonDown(0) && Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, enemyLayer) && !pauseMenu.isPaused)
+        if (Input.GetMouseButtonDown(0)
+            && !pauseMenu.isPaused
+            && Physics.Raycast(transform.position,
+                               transform.TransformDirection(Vector3.forward), 
+                               out hit, 
+                               Mathf.Infinity, 
+                               enemyLayer))
         {
             Debug.Log("Hit");
 

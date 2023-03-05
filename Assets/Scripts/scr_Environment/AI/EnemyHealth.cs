@@ -5,25 +5,24 @@ using TMPro;
 
 public class EnemyHealth : MonoBehaviour
 {
-    Material normalMat;
-
-    [SerializeField] Material hurtMat;
-
-    [SerializeField] float damageDelayTime;
-
-    MeshRenderer meshRenderer;
-
+    [Header("Haelth")]
     public int health = 100;
-
-    bool canTakeDamage;
-
     [SerializeField] TextMeshProUGUI healthText;
 
-    Shoot shoot;
+    [Header("Damage")]
+    [SerializeField] float damageDelayTime;
+    [SerializeField] Material hurtMat;
 
+    // Private variables
+    bool canTakeDamage;
+    MeshRenderer meshRenderer;
+    Material normalMat;
+
+    // Scripts
+    Shoot shoot;
     UI_PauseMenu pauseMenu;
 
-    void Start()
+    void Awake()
     {
         shoot = FindObjectOfType<Shoot>();
 
@@ -55,7 +54,8 @@ public class EnemyHealth : MonoBehaviour
 
     void Update()
     {
-        if (shoot.beenHit && !canTakeDamage)
+        if (shoot.beenHit 
+            && !canTakeDamage)
         {
             canTakeDamage = true;
             StartCoroutine(TakeDamage(shoot.damage));
@@ -74,7 +74,8 @@ public class EnemyHealth : MonoBehaviour
             healthText.gameObject.SetActive(false);
         }
 
-        if(!pauseMenu.isPaused && health > 0)
+        if(!pauseMenu.isPaused 
+            && health > 0)
         {
             healthText.gameObject.SetActive(true);
         }

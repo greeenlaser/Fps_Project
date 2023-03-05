@@ -65,6 +65,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         controller.Move(speed * Time.deltaTime * move);
+
         if (isGrounded 
             && Input.GetButtonDown("Jump"))
         {

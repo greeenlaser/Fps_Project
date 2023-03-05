@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class CameraLook : MonoBehaviour
 {
+    [Header("Camera")]
     public float sensitivity = 100f;
-    float xRotation;
 
-    private Transform playerBody;
+    // Private Variables
+    float xRotation;
+    Transform playerBody;
 
     private void Awake()
     {
