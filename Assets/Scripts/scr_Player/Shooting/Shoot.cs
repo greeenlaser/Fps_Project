@@ -39,6 +39,7 @@ public class Shoot : MonoBehaviour
     bool canShoot;
     int gunValue;
     bool raycaster;
+    RaycastHit hit;
 
     [System.Serializable]
     class ShootSlot
@@ -66,8 +67,6 @@ public class Shoot : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        RaycastHit hit;
-
         raycaster = Physics.Raycast(transform.position,
                                transform.TransformDirection(Vector3.forward),
                                out hit,
@@ -78,11 +77,7 @@ public class Shoot : MonoBehaviour
 
         if (raycaster)
         {
-            amLooking = true;
-        }
-        else
-        {
-            amLooking = false;
+            hit.transform.gameObject.GetComponent<EnemyHealth>().healthBar.gameObject.SetActive(true);
         }
 
         ammoText.text = ammoValue.ToString();
@@ -113,9 +108,9 @@ public class Shoot : MonoBehaviour
         {
             canShoot = false;
 
-            beenHit = true;
-
             ammoValue -= 1;
+
+            hit.transform.gameObject.GetComponent<EnemyHealth>().StartCoroutine(hit.transform.gameObject.GetComponent<EnemyHealth>().TakeDamage(damage));
 
             yield return new WaitForSeconds(shootDelay);
 

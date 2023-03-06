@@ -7,14 +7,14 @@ public class EnemyHealth : MonoBehaviour
 {
     [Header("Haelth")]
     public int health = 100;
-    [SerializeField] Slider healthBar;
+    public Slider healthBar;
 
     [Header("Damage")]
     [SerializeField] float damageDelayTime;
     [SerializeField] Material hurtMat;
 
     // Private variables
-    bool canTakeDamage;
+    //bool canTakeDamage;
     MeshRenderer meshRenderer;
     Material normalMat;
 
@@ -39,7 +39,7 @@ public class EnemyHealth : MonoBehaviour
 
     public IEnumerator TakeDamage(int damage)
     {
-        canTakeDamage = false;
+        //canTakeDamage = false;
 
         health -= damage;
 
@@ -54,14 +54,6 @@ public class EnemyHealth : MonoBehaviour
 
     void Update()
     {
-        if (shoot.damageTaken 
-            && !canTakeDamage)
-        {
-            canTakeDamage = true;
-            StartCoroutine(TakeDamage(shoot.damage));
-            shoot.beenHit = false;
-            shoot.damageTaken = false;
-        }
 
         if(health <= 0)
         {
