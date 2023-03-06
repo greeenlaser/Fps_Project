@@ -9,9 +9,9 @@ public class Shoot : MonoBehaviour
     public LayerMask enemyLayer;
 
     // Hidden in inspector
-     public bool beenHit = false;
-     public bool damageTaken = false;
-    public bool hasShot = false;
+    [HideInInspector] public bool hasShot = false;
+    [HideInInspector] public float shootingfovAmount;
+     
 
     //ammo
     int ammoValue;
@@ -19,6 +19,7 @@ public class Shoot : MonoBehaviour
     [Header("Shooting")]
     public float shootDelay;
     public int damage;
+    [SerializeField] float maxShootDistance;
 
     // Hidden public variables
     [HideInInspector] public bool amLooking;
@@ -51,6 +52,10 @@ public class Shoot : MonoBehaviour
         public int damage;
 
         public float delay;
+
+        public float aimValue;
+
+        public float shootingDistance;
     }
 
     // Start is called before the first frame update
@@ -62,6 +67,8 @@ public class Shoot : MonoBehaviour
         gunTypeText.gameObject.SetActive(false);
 
         canShoot = true;
+
+        Pistol();
     }
 
     // Update is called once per frame
@@ -77,7 +84,11 @@ public class Shoot : MonoBehaviour
 
         if (raycaster)
         {
-            hit.transform.gameObject.GetComponent<EnemyHealth>().healthBar.gameObject.SetActive(true);
+            hit.transform.gameObject
+                .GetComponent<EnemyHealth>()
+                .healthBar
+                .gameObject
+                .SetActive(true);
         }
 
         ammoText.text = ammoValue.ToString();
@@ -96,6 +107,10 @@ public class Shoot : MonoBehaviour
         }
 
         GunSwapping();
+
+        SetMaxShootingDistance();
+
+        Debug.Log(hit.distance);
     }
 
     IEnumerator ShootBullet()
@@ -104,22 +119,25 @@ public class Shoot : MonoBehaviour
             && !pauseMenu.isPaused
             && raycaster
             && ammoValue > 0
-            && canShoot)
+            && canShoot
+            && hit.distance <= maxShootDistance
+            )
         {
             canShoot = false;
 
             ammoValue -= 1;
 
-            hit.transform.gameObject.GetComponent<EnemyHealth>().StartCoroutine(hit.transform.gameObject.GetComponent<EnemyHealth>().TakeDamage(damage));
+            hit.transform.gameObject.
+                GetComponent<EnemyHealth>().
+                StartCoroutine(hit
+                                .transform
+                                .gameObject
+                                .GetComponent<EnemyHealth>()
+                                .TakeDamage(damage));
 
             yield return new WaitForSeconds(shootDelay);
 
             canShoot = true;
-        }
-
-        if (beenHit)
-        {
-            damageTaken = true;
         }
 
         if (Input.GetMouseButtonDown(0)
@@ -131,7 +149,7 @@ public class Shoot : MonoBehaviour
 
             hasShot = true;
 
-            CheckForGunValue();
+            TakeAmmo();
 
             ammoValue -= 1;
 
@@ -148,38 +166,16 @@ public class Shoot : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            gunValue = 0;
-
-            ammoText.gameObject.SetActive(true);
-            gunTypeText.gameObject.SetActive(true);
-
-            gunTypeText.text = shootSlot[0].gun.ToString();
-
-            ammoValue = shootSlot[0].ammoAmount;
-
-            damage = shootSlot[0].damage;
-
-            shootDelay = shootSlot[0].delay;
+            Pistol();
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            gunValue = 1;
-
-            ammoText.gameObject.SetActive(true);
-            gunTypeText.gameObject.SetActive(true);
-
-            gunTypeText.text = shootSlot[1].gun.ToString();
-
-            ammoValue = shootSlot[1].ammoAmount;            
-
-            damage = shootSlot[1].damage;
-
-            shootDelay = shootSlot[1].delay;
+            AssaultRifle();
         }
     }
 
-    void CheckForGunValue()
+    void TakeAmmo()
     {
         if (hasShot 
             && gunValue == 0)
@@ -192,5 +188,63 @@ public class Shoot : MonoBehaviour
         {
             shootSlot[1].ammoAmount -= 1;
         }
+    }
+
+    void SetMaxShootingDistance()
+    {
+        // To set max sho
+
+        if (gunValue == 0)
+        {
+            maxShootDistance = shootSlot[0].shootingDistance;
+        }
+
+        if (gunValue == 1)
+        {
+            maxShootDistance = shootSlot[1].shootingDistance;
+        }
+    }
+
+    // Weapon functions go below here
+    // For setting the variables 
+
+    void Pistol()
+    {
+        gunValue = 0;
+
+        ammoText.gameObject.SetActive(true);
+        gunTypeText.gameObject.SetActive(true);
+
+        gunTypeText.text = shootSlot[0].gun.ToString();
+
+        ammoValue = shootSlot[0].ammoAmount;
+
+        damage = shootSlot[0].damage;
+
+        shootDelay = shootSlot[0].delay;
+
+        shootingfovAmount = shootSlot[0].aimValue;
+
+        maxShootDistance = shootSlot[0].shootingDistance;
+    }
+
+    void AssaultRifle()
+    {
+        gunValue = 1;
+
+        ammoText.gameObject.SetActive(true);
+        gunTypeText.gameObject.SetActive(true);
+
+        gunTypeText.text = shootSlot[1].gun.ToString();
+
+        ammoValue = shootSlot[1].ammoAmount;
+
+        damage = shootSlot[1].damage;
+
+        shootDelay = shootSlot[1].delay;
+
+        shootingfovAmount = shootSlot[1].aimValue;
+
+        maxShootDistance = shootSlot[1].shootingDistance;
     }
 }

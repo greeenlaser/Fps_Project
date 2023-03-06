@@ -71,15 +71,5 @@ public class EnemyHealth : MonoBehaviour
         {
             healthBar.gameObject.SetActive(true);
         }
-
-        // health bar when looking at it
-        if (shoot.amLooking)
-        {
-            healthBar.gameObject.SetActive(true);
-        }
-        else
-        {
-            healthBar.gameObject.SetActive(false);
-        }
     }
 }
