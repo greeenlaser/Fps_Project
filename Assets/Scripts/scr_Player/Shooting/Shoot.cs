@@ -11,7 +11,10 @@ public class Shoot : MonoBehaviour
     // Hidden in inspector
     [HideInInspector] public bool hasShot = false;
     [HideInInspector] public float shootingfovAmount;
-     
+
+    [Header("Guns")]
+    public GameObject pistol;
+    public GameObject assaultRifle;
 
     //ammo
     int ammoValue;
@@ -24,6 +27,9 @@ public class Shoot : MonoBehaviour
     // Hidden public variables
     [HideInInspector] public bool amLooking;
 
+    // Recoil
+    float minDistanceForRecoil;
+    float maxDistanceForRecoil;
 
     [Header("Object References")]
     public GameObject crosshair;
@@ -36,11 +42,16 @@ public class Shoot : MonoBehaviour
     // Gun data
     [SerializeField] ShootSlot[] shootSlot;
 
+    // Audio
+    AudioSource audioSource;
+    AudioClip gunSound;
+
     //Private variables
     bool canShoot;
     int gunValue;
     bool raycaster;
     RaycastHit hit;
+    static float t = 0.0f;
 
     [System.Serializable]
     class ShootSlot
@@ -56,11 +67,19 @@ public class Shoot : MonoBehaviour
         public float aimValue;
 
         public float shootingDistance;
+
+        public AudioClip shootSound;
+
+        public float minRecoilDist;
+
+        public float maxRecoilDist;
     }
 
     // Start is called before the first frame update
     void Awake()
     {
+        audioSource = GetComponent<AudioSource>();
+
         pauseMenu = FindObjectOfType<UI_PauseMenu>();
 
         ammoText.gameObject.SetActive(false);
@@ -110,6 +129,8 @@ public class Shoot : MonoBehaviour
 
         SetMaxShootingDistance();
 
+        EnableWeapons();
+
         Debug.Log(hit.distance);
     }
 
@@ -145,6 +166,8 @@ public class Shoot : MonoBehaviour
             && canShoot
             &&!pauseMenu.isPaused)
         {
+            audioSource.PlayOneShot(gunSound);
+
             canShoot = false;
 
             hasShot = true;
@@ -160,7 +183,6 @@ public class Shoot : MonoBehaviour
             canShoot = true;
         }
     }
-
 
     public void GunSwapping()
     {
@@ -205,6 +227,27 @@ public class Shoot : MonoBehaviour
         }
     }
 
+    void EnableWeapons()
+    {
+        if (gunValue == 0)
+        {
+            pistol.SetActive(true);
+        }
+        else
+        {
+            pistol.SetActive(false);
+        }
+
+        if (gunValue == 1)
+        {
+            assaultRifle.SetActive(true);
+        }
+        else
+        {
+            assaultRifle.SetActive(false);
+        }
+    }
+
     // Weapon functions go below here
     // For setting the variables 
 
@@ -226,6 +269,12 @@ public class Shoot : MonoBehaviour
         shootingfovAmount = shootSlot[0].aimValue;
 
         maxShootDistance = shootSlot[0].shootingDistance;
+
+        gunSound = shootSlot[0].shootSound;
+
+        minDistanceForRecoil = shootSlot[0].minRecoilDist;
+
+        maxDistanceForRecoil = shootSlot[0].maxRecoilDist;
     }
 
     void AssaultRifle()
@@ -246,5 +295,11 @@ public class Shoot : MonoBehaviour
         shootingfovAmount = shootSlot[1].aimValue;
 
         maxShootDistance = shootSlot[1].shootingDistance;
+
+        gunSound = shootSlot[1].shootSound;
+
+        minDistanceForRecoil = shootSlot[1].minRecoilDist;
+
+        maxDistanceForRecoil = shootSlot[1].maxRecoilDist; 
     }
 }
