@@ -33,14 +33,14 @@ public class BackgroundMusic : MonoBehaviour
 
         if (pauseMenu.isPaused && canPauseMusic)
         {
-            audiosource.Pause();
+            audiosource.volume -= 0.1f;
 
             canPauseMusic = false;
         }
 
         if (!pauseMenu.isPaused && !canPauseMusic)
         {
-            audiosource.UnPause();
+            audiosource.volume += 0.1f;
 
             canPauseMusic = true;
         }

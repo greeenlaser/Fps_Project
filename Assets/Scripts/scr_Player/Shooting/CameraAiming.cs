@@ -4,20 +4,25 @@ using UnityEngine;
 
 public class CameraAiming : MonoBehaviour
 {
-    Shoot shoot;
-
-    Camera cam;
-
+    // Private variables
     float normalfov;
+    bool isAiming;
+    Shoot shoot;
+    Camera cam;
+    CameraLook look;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         shoot = GetComponent<Shoot>();
 
         cam = GetComponent<Camera>();
 
+        look = GetComponent<CameraLook>();
+
         normalfov = cam.fieldOfView;
+
+        isAiming = false;        
     }
 
     // Update is called once per frame
@@ -26,10 +31,35 @@ public class CameraAiming : MonoBehaviour
         if (Input.GetMouseButton(1))
         {
             cam.fieldOfView =  shoot.shootingfovAmount;
+
+            if (!isAiming)
+            {
+                SensitivityUpChange();
+            }
         }
+
         else
         {
             cam.fieldOfView = normalfov;
+
+            if (isAiming)
+            {
+                SensitivityDownChange();
+            }
         }
+    }
+
+    void SensitivityUpChange()
+    {
+        look.sensitivity *= .5f;
+
+        isAiming = true;
+    }
+
+    void SensitivityDownChange()
+    {
+        look.sensitivity *= 2f;
+
+        isAiming = false;
     }
 }

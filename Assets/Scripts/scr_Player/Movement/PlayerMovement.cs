@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -16,8 +17,11 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Transform groundCheck;
     [SerializeField] private LayerMask groundMask;
 
-    [Header("Other assignables")]
+    [Header("Assignables")]
     [SerializeField] private GameObject par_Managers;
+
+    [Header("Other Variables")]
+    public int level;
 
     //private variables
     private bool isGrounded;
@@ -25,9 +29,13 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 velocity;
     private CharacterController controller;
 
+    // Hidden variables
+    [HideInInspector] public int bulletType;
+
     //scripts
     private UI_PauseMenu PauseMenu;
     private Manager_Console ConsoleScript;
+    Shoot shoot;
 
     private void Awake()
     {
@@ -35,6 +43,10 @@ public class PlayerMovement : MonoBehaviour
         ConsoleScript = par_Managers.GetComponent<Manager_Console>();
 
         controller = GetComponent<CharacterController>();
+
+        level = SceneManager.GetActiveScene().buildIndex;
+
+        shoot = GetComponentInChildren<Shoot>();
     }
 
     // Update is called once per frame
@@ -75,5 +87,53 @@ public class PlayerMovement : MonoBehaviour
 
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
+    }
+
+    void OnTriggerEnter(Collider col)
+    {
+        if (col.CompareTag("Goal"))
+        {
+            if (level == 1)
+            {
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            }
+
+            if (level == 2)
+            {
+                SceneManager.LoadScene(0);
+
+                Cursor.lockState = CursorLockMode.None;
+
+                Cursor.visible = true;
+            }
+        }
+
+        if (col.CompareTag("Pistol Bullet"))
+        {
+            Debug.Log("touching " + col.tag);
+
+            shoot.shootSlot[0].ammoAmount += shoot.shootSlot[0].bulletPickUpAmount;
+
+            if (shoot.gunValue == 0)
+            {
+                shoot.ammoValue = shoot.shootSlot[0].ammoAmount;
+            }
+
+            Destroy(col.gameObject);
+        }
+
+        if (col.CompareTag("AR Bullet"))
+        {
+            Debug.Log("touching " + col.tag);
+
+            shoot.shootSlot[1].ammoAmount += shoot.shootSlot[1].bulletPickUpAmount;
+
+            if (shoot.gunValue == 1)
+            {
+                shoot.ammoValue = shoot.shootSlot[1].ammoAmount;
+            }
+
+            Destroy(col.gameObject);
+        }
     }
 }

@@ -9,15 +9,17 @@ public class Shoot : MonoBehaviour
     public LayerMask enemyLayer;
 
     // Hidden in inspector
-    [HideInInspector] public bool hasShot = false;
+    [HideInInspector] public int bulletAmount;
+    [HideInInspector] public int ammoValue;
+    [HideInInspector] public int gunValue;
     [HideInInspector] public float shootingfovAmount;
+    [HideInInspector] public bool hasShot = false;
 
     [Header("Guns")]
     public GameObject pistol;
     public GameObject assaultRifle;
 
     //ammo
-    int ammoValue;
 
     [Header("Shooting")]
     public float shootDelay;
@@ -28,8 +30,8 @@ public class Shoot : MonoBehaviour
     [HideInInspector] public bool amLooking;
 
     // Recoil
-    float minDistanceForRecoil;
-    float maxDistanceForRecoil;
+    Vector3 weaponOriginPos;
+    Vector3 recoilPos;
 
     [Header("Object References")]
     public GameObject crosshair;
@@ -40,7 +42,7 @@ public class Shoot : MonoBehaviour
     UI_PauseMenu pauseMenu;
 
     // Gun data
-    [SerializeField] ShootSlot[] shootSlot;
+    public ShootSlot[] shootSlot;
 
     // Audio
     AudioSource audioSource;
@@ -48,13 +50,11 @@ public class Shoot : MonoBehaviour
 
     //Private variables
     bool canShoot;
-    int gunValue;
     bool raycaster;
     RaycastHit hit;
-    static float t = 0.0f;
 
     [System.Serializable]
-    class ShootSlot
+    public class ShootSlot
     {
         public GunType gun;
 
@@ -70,9 +70,9 @@ public class Shoot : MonoBehaviour
 
         public AudioClip shootSound;
 
-        public float minRecoilDist;
+        public Vector3 recoil;
 
-        public float maxRecoilDist;
+        public int bulletPickUpAmount;
     }
 
     // Start is called before the first frame update
@@ -130,8 +130,8 @@ public class Shoot : MonoBehaviour
         SetMaxShootingDistance();
 
         EnableWeapons();
-
-        Debug.Log(hit.distance);
+        
+        //Debug.Log(hit.distance);
     }
 
     IEnumerator ShootBullet()
@@ -145,6 +145,10 @@ public class Shoot : MonoBehaviour
             )
         {
             canShoot = false;
+
+            audioSource.PlayOneShot(gunSound);
+
+            RecoilDown();
 
             ammoValue -= 1;
 
@@ -166,6 +170,8 @@ public class Shoot : MonoBehaviour
             && canShoot
             &&!pauseMenu.isPaused)
         {
+            RecoilDown();
+
             audioSource.PlayOneShot(gunSound);
 
             canShoot = false;
@@ -182,6 +188,11 @@ public class Shoot : MonoBehaviour
 
             canShoot = true;
         }
+
+        if (Input.GetMouseButtonUp(0))
+        {
+            RecoilUp();
+        }
     }
 
     public void GunSwapping()
@@ -194,6 +205,32 @@ public class Shoot : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             AssaultRifle();
+        }
+    }
+
+    void RecoilDown()
+    {
+        if (gunValue == 0)
+        {
+            pistol.transform.localEulerAngles += recoilPos;
+        }
+
+        if (gunValue == 1)
+        {
+            assaultRifle.transform.localEulerAngles += recoilPos;
+        }
+    }
+
+    void RecoilUp()
+    {
+        if (gunValue == 0)
+        {
+            pistol.transform.localEulerAngles = weaponOriginPos;
+        }
+
+        if (gunValue == 1)
+        {
+            assaultRifle.transform.localEulerAngles = weaponOriginPos;
         }
     }
 
@@ -270,11 +307,13 @@ public class Shoot : MonoBehaviour
 
         maxShootDistance = shootSlot[0].shootingDistance;
 
+        recoilPos = shootSlot[0].recoil;
+
+        weaponOriginPos = pistol.transform.position;
+
         gunSound = shootSlot[0].shootSound;
 
-        minDistanceForRecoil = shootSlot[0].minRecoilDist;
-
-        maxDistanceForRecoil = shootSlot[0].maxRecoilDist;
+        bulletAmount = shootSlot[0].bulletPickUpAmount;
     }
 
     void AssaultRifle()
@@ -296,10 +335,12 @@ public class Shoot : MonoBehaviour
 
         maxShootDistance = shootSlot[1].shootingDistance;
 
+        recoilPos = shootSlot[1].recoil;
+
+        weaponOriginPos = assaultRifle.transform.position;
+
         gunSound = shootSlot[1].shootSound;
 
-        minDistanceForRecoil = shootSlot[1].minRecoilDist;
-
-        maxDistanceForRecoil = shootSlot[1].maxRecoilDist; 
+        bulletAmount = shootSlot[1].bulletPickUpAmount;
     }
 }

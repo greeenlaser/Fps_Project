@@ -21,12 +21,15 @@ public class EnemyHealth : MonoBehaviour
     // Scripts
     Shoot shoot;
     UI_PauseMenu pauseMenu;
+    EnemyCounter enemyCounter;
 
     void Awake()
     {
         healthBar.value = 100;
 
         healthBar.gameObject.SetActive(false);
+
+        enemyCounter = FindObjectOfType<EnemyCounter>();
 
         shoot = FindObjectOfType<Shoot>();
 
@@ -54,9 +57,10 @@ public class EnemyHealth : MonoBehaviour
 
     void Update()
     {
-
         if(health <= 0)
         {
+            enemyCounter.enemyCounter -= 1;
+
             Destroy(gameObject);
         }
 
